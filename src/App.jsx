@@ -1,57 +1,35 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
+import React, { useState } from 'react';
 import './App.css';
+import Form from './Form';
+import Lista from './Lista';
 
 function App() {
-  const vetor = [
-    {
-      inicio: '08:00',
-      fim: '12:00',
-      dias: ['SEGUNDA', 'TERCA', 'QUARTA', 'QUINTA', 'SEXTA', 'SABADO'],
-    },
-    {
-      inicio: '13:30',
-      fim: '17:30',
-      dias: ['SEGUNDA', 'TERCA', 'QUARTA', 'QUINTA', 'SEXTA'],
-    },
-  ];
+  const [turnos, setTurnos] = useState([]);
 
-  const diasSemana = ['DOMINGO', 'SEGUNDA', 'TERCA', 'QUARTA', 'QUINTA', 'SEXTA', 'SABADO'];
+  // Função para adicionar um novo turno
+  const adicionarTurno = (novoTurno) => {
+    setTurnos([...turnos, novoTurno]);
+  };
 
-  const renderHorario = (dia) => {
-    const horarios = vetor
-      .filter((horario) => horario.dias.includes(dia))
-      .map((horario) => `${horario.inicio} - ${horario.fim}`)
-      .join(' e ');
+  // Função para editar um turno existente
+  const editarTurno = (index, turnoEditado) => {
+    const turnosAtualizados = turnos.map((turno, i) => (i === index ? turnoEditado : turno));
+    setTurnos(turnosAtualizados);
+  };
 
-    return horarios || 'fechado';
+  // Função para remover um turno
+  const removerTurno = (index) => {
+    const turnosAtualizados = turnos.filter((_, i) => i !== index);
+    setTurnos(turnosAtualizados);
   };
 
   return (
-    <>
-      <div>
-        {/* <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a> */}
-      </div>
-      <h1>Empreendimento</h1>
-      <div className="card">
-        <h2>Horários de Funcionamento</h2>
-        <ul>
-          {diasSemana.map((dia) => (
-            <li key={dia}>
-              {dia.charAt(0).toUpperCase() + dia.slice(1).toLowerCase()} | {renderHorario(dia)}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </>
+    <div className="App">
+      <h1>Gerenciamento de Turnos</h1>
+      <Form onSubmit={adicionarTurno} />
+      <Lista turnos={turnos} onEdit={editarTurno} onDelete={removerTurno} />
+    </div>
   );
 }
 
 export default App;
-
